@@ -8,12 +8,21 @@ This doc is heavily borrowed from [emernerf](https://github.com/NVlabs/EmerNeRF/
 
 To download the Waymo dataset, you need to register an account at [Waymo Open Dataset](https://waymo.com/open/). You also need to install gcloud SDK and authenticate your account. Please refer to [this page](https://cloud.google.com/sdk/docs/install) for more details.
 
+* 如果 google sdk 下载失败的话可以先下载到本地，然后再自己手动安装：
+  
+    ```shell
+    curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-442.0.0-linux-x86_64.tar.gz
+    tar -xf google-cloud-cli-442.0.0-linux-x86_64.tar.gz
+    ./google-cloud-sdk/install.sh
+    ```
+
 ### Set Up the Data Directory
 
 Once you've registered and installed the gcloud SDK, create a directory to house the raw data:
 
 ```shell
 # Create the data directory or create a symbolic link to the data directory
+cd S3Gaussian
 mkdir -p ./data/waymo/raw   
 mkdir -p ./data/waymo/processed 
 ```
@@ -22,7 +31,8 @@ mkdir -p ./data/waymo/processed
 
 Start by downloading the necessary data samples as follows:
 
-### Downloading Specific Scenes from Waymo Open Dataset
+### Downloading Specific Scenes from Waymo Open Dataset （1个例子）
+
 
 For example, to obtain the 114th, 700th, and 754th scenes from the Waymo Open Dataset, execute:
 
@@ -32,21 +42,29 @@ python data/download_waymo.py \
     --scene_ids 114 700 754
 ```
 
-### Downloading Different Splits of the NOTR Dataset
+这个脚本会首先读取 ./data/waymo/waymo_train_list.txt 这个文件 & `--scene_ids`，然后下载 3个 segment 文件到 ./data/waymo/raw 文件夹下面：
 
-Our NOTR dataset comes in multiple splits. Specify the `split_file` argument to download your desired split:
+<img width="1752" alt="截屏2024-09-03 16 37 03" src="https://github.com/user-attachments/assets/7cbfbeaa-2498-4fae-8c9d-fa01e86cbaac">
+
+* 这个脚本中的逻辑是，如果 command lines 提供了 `--scene_ids`，那么 `download_waymo.py` 则会使用这些 `--scene_ids` 来进行下载，但是如果 command lines 提供了 `--split_file`，那么 `download_waymo.py` 则会使用这些 `--split_file` 来进行下载
+
+### Downloading Different Splits of the NOTR Dataset （制作论文中的数据集）
+
+上面给了1个使用 download_waymo.py 脚本的例子，EmerNerf 这篇工作提供了自己的 --scene_ids, 我们直接从 `data/waymo_splits/static32.txt` & `data/waymo_splits/dynamic32.txt` 中提取这些值即可，通过运行下面的命令来制作论文中的数据集：
 
 - **Static32 Split:**
 
-```shell
-python datasets/download_waymo.py --split_file data/waymo_splits/static32.txt
-```
+    ```shell
+    python data/download_waymo.py --split_file data/waymo_splits/static32.txt
+    ```
+    
+    <img width="1752" alt="截屏2024-09-03 17 00 31" src="https://github.com/user-attachments/assets/5efef97d-d9ac-4210-bb7e-ee2d99d95456">
 
 - **Dynamic32 Split:**
 
-```shell
-python datasets/download_waymo.py --split_file data/waymo_splits/dynamic32.txt
-```
+    ```shell
+    python data/download_waymo.py --split_file data/waymo_splits/dynamic32.txt
+    ```
 
 Ensure you modify the paths and filenames to align with your project directory structure and needs.
 
@@ -82,7 +100,7 @@ After downloading the raw dataset, you'll need to preprocess this compressed dat
 To preprocess specific scenes of the dataset, use the following command:
 
 ```shell
-python preprocess.py \
+python preprocess_main.py \
     --data_root data/waymo/raw/ \
     --target_dir data/waymo/processed \
     --split training \
@@ -91,11 +109,13 @@ python preprocess.py \
     --scene_ids 114 700
 ```
 
-Alternatively, preprocess different splits of the NOTR dataset by providing the split file:
+<img width="1752" alt="截屏2024-09-03 18 26 04" src="https://github.com/user-attachments/assets/b0f8e94e-e042-4227-bf34-4ef79a80f6f8">
+
+EmerNerf 这篇工作提供了自己的 --scene_ids, 我们直接从 `data/waymo_splits/static32.txt` & `data/waymo_splits/dynamic32.txt` 中提取这些值即可，通过运行下面的命令来 preprocess(split) 制作论文中的数据集：
 
 ```shell
 # preprocess the static split
-python preprocess.py \
+python preprocess_main.py \
     --data_root data/waymo/raw/ \
     --target_dir data/waymo/processed \
     --split training \
@@ -103,6 +123,8 @@ python preprocess.py \
     --workers 16 \
     --split_file data/waymo_splits/static32.txt # change to dynamic32.txt or diverse56.txt to preprocess different splits
 ```
+
+preprocess 之后的结果会保存到 0_Ori/S3Gaussian/data/waymo/processed
 
 **Troubleshooting**: if you encounter `TypeError: 'numpy._DTypeMeta' object is not subscriptable`, use `pip install numpy==1.26.1` and ignore the warnings.
 
