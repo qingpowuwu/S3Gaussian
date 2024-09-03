@@ -109,7 +109,9 @@ python preprocess_main.py \
     --scene_ids 114 700
 ```
 
-<img width="1752" alt="截屏2024-09-03 18 26 04" src="https://github.com/user-attachments/assets/b0f8e94e-e042-4227-bf34-4ef79a80f6f8">
+<img width="1752" alt="截屏2024-09-03 19 22 56" src="https://github.com/user-attachments/assets/7284e290-1d9a-41d0-a038-20561383d69f">
+
+可以看出来 preprocess 之后的 waymo数据集包括了 dynamic_mask, images, ...
 
 EmerNerf 这篇工作提供了自己的 --scene_ids, 我们直接从 `data/waymo_splits/static32.txt` & `data/waymo_splits/dynamic32.txt` 中提取这些值即可，通过运行下面的命令来 preprocess(split) 制作论文中的数据集：
 
