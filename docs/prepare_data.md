@@ -115,18 +115,35 @@ python preprocess_main.py \
 
 EmerNerf 这篇工作提供了自己的 --scene_ids, 我们直接从 `data/waymo_splits/static32.txt` & `data/waymo_splits/dynamic32.txt` 中提取这些值即可，通过运行下面的命令来 preprocess(split) 制作论文中的数据集：
 
+#### (1) 制作 static32
+
 ```shell
 # preprocess the static split
 python preprocess_main.py \
     --data_root data/waymo/raw/ \
-    --target_dir data/waymo/processed \
+    --target_dir data/waymo/processed/static32 \
     --split training \
     --process_keys images lidar calib pose dynamic_masks \
     --workers 16 \
     --split_file data/waymo_splits/static32.txt # change to dynamic32.txt or diverse56.txt to preprocess different splits
 ```
 
-preprocess 之后的结果会保存到 0_Ori/S3Gaussian/data/waymo/processed
+preprocess 之后的结果会保存到 0_Ori/S3Gaussian/data/waymo/processed/static32
+
+#### (2) 制作 dynamics32
+
+```shell
+# preprocess the static split
+python preprocess_main.py \
+    --data_root data/waymo/raw/ \
+    --target_dir data/waymo/processed/dynamic32 \
+    --split training \
+    --process_keys images lidar calib pose dynamic_masks \
+    --workers 16 \
+    --split_file data/waymo_splits/dynamic32.txt # change to dynamic32.txt or diverse56.txt to preprocess different splits
+```
+
+preprocess 之后的结果会保存到 0_Ori/S3Gaussian/data/waymo/processed/static32
 
 **Troubleshooting**: if you encounter `TypeError: 'numpy._DTypeMeta' object is not subscriptable`, use `pip install numpy==1.26.1` and ignore the warnings.
 
@@ -163,14 +180,14 @@ The organized dataset will follow this directory structure:
 data/waymo/processed
 ├── training
 │   ├── SCENE_ID
-│   │   ├── dynamic_masks      # Dynamic masks: `{timestep:03d}_{cam_id}.png`
+│   │   ├── dynamic_masks      # Dynamic masks:     `{timestep:03d}_{cam_id}.png`
 │   │   ├── ego_pose           # Ego vehicle poses: `{timestep:03d}.txt`
 │   │   ├── extrinsics         # Camera extrinsics: `{cam_id}.txt`
-│   │   ├── images             # Images: `{timestep:03d}_{cam_id}.jpg`
+│   │   ├── images             # Images:            `{timestep:03d}_{cam_id}.jpg`
 │   │   ├── intrinsics         # Camera intrinsics: `{cam_id}.txt`
-│   │   ├── lidar              # LiDAR data: `{timestep:03d}.bin`
+│   │   ├── lidar              # LiDAR data:        `{timestep:03d}.bin`
 │   │   ├── sky_masks          # Sky masks: we don't use here
-│   │   ├── FEATURE_NAME       # Features: `{timestep:03d}_{cam_id}.npy` 
+│   │   ├── FEATURE_NAME       # Features:                    `{timestep:03d}_{cam_id}.npy` 
 │   │   └── occ3d              # 3D semantic occupancy grids: `{timestep:03d}.npz` or `{timestep:03d}_04.npz`
 ```
 
