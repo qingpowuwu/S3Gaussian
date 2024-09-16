@@ -17,8 +17,9 @@ def mse(img1, img2):
 def psnr(img1, img2):
     mse = (((img1 - img2)) ** 2).view(img1.shape[0], -1).mean(1, keepdim=True)
     return 20 * torch.log10(1.0 / torch.sqrt(mse))
-
-def get_robust_pca(features: torch.Tensor, m: float = 2, remove_first_component=False): # 这个函数 S3Guassian 似乎没有用到：2024-09-16
+    
+# ===================== 这个函数 S3Guassian 似乎没有用到：2024-09-16 ===================== 
+def get_robust_pca(features: torch.Tensor, m: float = 2, remove_first_component=False): 
     # features: (N, C)
     # m: a hyperparam controlling how many std dev outside for outliers
     assert len(features.shape) == 2, "features should be (N, C)"
