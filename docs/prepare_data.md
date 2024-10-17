@@ -44,6 +44,8 @@ python data/download_waymo.py \
 
 这个脚本会首先读取 ./data/waymo/waymo_train_list.txt 这个文件 & `--scene_ids`，然后下载 3个 segment 文件到 ./data/waymo/raw 文件夹下面：
 
+* 实际上这个文件会下载 ./data/waymo/waymo_train_list.txt  文件中的 第 `--scene_ids` - 1 行 文件到 --target_dir 下面
+
 <img width="1752" alt="截屏2024-09-03 16 37 03" src="https://github.com/user-attachments/assets/7cbfbeaa-2498-4fae-8c9d-fa01e86cbaac">
 
 * 这个脚本中的逻辑是，如果 command lines 提供了 `--scene_ids`，那么 `download_waymo.py` 则会使用这些 `--scene_ids` 来进行下载，但是如果 command lines 提供了 `--split_file`，那么 `download_waymo.py` 则会使用这些 `--split_file` 来进行下载
