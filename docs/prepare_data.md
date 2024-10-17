@@ -45,6 +45,7 @@ python data/download_waymo.py \
 这个脚本会首先读取 ./data/waymo/waymo_train_list.txt 这个文件 & `--scene_ids`，然后下载 3个 segment 文件到 ./data/waymo/raw 文件夹下面：
 
 * 实际上这个文件会下载 ./data/waymo/waymo_train_list.txt  文件中的 第 `--scene_ids` - 1 行 文件到 --target_dir 下面
+* 例如会 `--scene_ids=114` 的时候则会下载 segment-12505030131868863688_1740_000_1760_000_with_camera_labels.tfrecord 文件 到 /home/qingpo.wuwu1/Project_2_3dGS_Cars/1_Ours/S3Gaussian/data/waymo/raw/segment-12505030131868863688_1740_000_1760_000_with_camera_labels.tfrecord
 
 <img width="1752" alt="截屏2024-09-03 16 37 03" src="https://github.com/user-attachments/assets/7cbfbeaa-2498-4fae-8c9d-fa01e86cbaac">
 
