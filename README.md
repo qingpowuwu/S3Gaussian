@@ -53,24 +53,29 @@ We only use dynamic32 and static32 split.
 
 For training first clip (eg. 0-50 frames), run 
 
-```
+```bash
 python train.py -s $data_dir --port 6017 --expname "waymo" --model_path $model_path 
 ```
 If you want to try novel view  synthesis, use 
-```
+
+```bash
 --configs "arguments/nvs.py"
 ```
+
 For instance, you can try:
-```
+
+```bash
 python train.py -s "./data/processed/dynamic32/training/022" --expname "waymo" --model_path "./work_dirs/phase1/dynamic/recon/022"
 ```
 
 For training next clip (eg. 51-100 frames), run 
-```
+
+```bash
 python train.py -s $data_dir --port 6017 --expname "waymo" --model_path $model_path --prior_checkpoint "$prior_dir/chkpnt_fine_50000.pth" --configs "arguments/stage2.py"
 ```
 For instance, you can try:
-```
+
+```bash
 python train.py -s "./data/processed/dynamic32/training/022" --expname "waymo" --model_path "./work_dirs/phase1/dynamic/recon/p2/022" --prior_checkpoint "./work_dirs/phase1/dynamic/recon/022/chkpnt_fine_50000.pth" --configs "arguments/stage2.py"
 ```
 
@@ -79,18 +84,23 @@ Also, you can load an existing checkpoint with:
 ```python
 python train.py -s $data_dir --port 6017 --expname "waymo" --start_checkpoint "$ckpt_dir/chkpnt_fine_30000.pth" --model_path $model_path 
 ```
+
 For more scripts examples, please check [here](scripts).
 ### Evaluation and Visualization
 
 You can visualize and eval a checkpoints follow:
+
 ```python
 python train.py -s $data_dir --port 6017 --expname "waymo" --start_checkpoint "$ckpt_dir/chkpnt_fine_50000.pth" --model_path $model_path --eval_only
 ```
 If you use different configs, you will need to add them as well:
-```
+
+```bash
 --configs "arguments/nvs.py"
+
 ```
 Then you can get rendering RGB videos, ground truth RGB videos, depth videos, dynamic rgb videos and static rgb videos.
+
 ## Acknowledgments
 Credits to @[Korace0v0](https://github.com/korace0v0) for building 3D Gaussians for street scenes. Many thanks!
 

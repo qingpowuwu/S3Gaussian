@@ -10,11 +10,26 @@ To download the Waymo dataset, you need to register an account at [Waymo Open Da
 
 * 如果 google sdk 下载失败的话可以先下载到本地，然后再自己手动安装：
   
-    ```shell
-    curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-442.0.0-linux-x86_64.tar.gz
-    tar -xf google-cloud-cli-442.0.0-linux-x86_64.tar.gz
-    ./google-cloud-sdk/install.sh
-    ```
+```shell
+cd /mnt/pfs/world_foundational_model/qingpowuwu/Project_3_BlackHole
+curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-442.0.0-linux-x86_64.tar.gz
+tar -xf google-cloud-cli-442.0.0-linux-x86_64.tar.gz
+./google-cloud-sdk/install.sh
+# 重新加载.bashrc文件
+source ~/.bashrc
+# 验证gcloud命令
+gcloud --version
+# 初始化gcloud
+gcloud init
+# 登录Google账号
+gcloud auth login
+# 设置默认项目（如果你有Google Cloud项目）
+gcloud config set project YOUR_PROJECT_ID
+# 授权应用默认凭据（用于下载Waymo数据）
+gcloud auth application-default login
+# 选择项目（假设选择项目1）：
+# 输入: 1
+```
 
 ### Set Up the Data Directory
 
@@ -22,9 +37,11 @@ Once you've registered and installed the gcloud SDK, create a directory to house
 
 ```shell
 # Create the data directory or create a symbolic link to the data directory
-cd S3Gaussian
-mkdir -p ./data/waymo/raw   
-mkdir -p ./data/waymo/processed 
+cd /mnt/pfs/world_foundational_model/qingpowuwu/Project_3_BlackHole/0_Datasets
+mkdir -p ./waymo/raw   
+mkdir -p ./waymo/processed 
+ln -s /mnt/pfs/world_foundational_model/qingpowuwu/Project_3_BlackHole/0_Datasets/waymo/raw /mnt/pfs/world_foundational_model/qingpowuwu/Project_3_BlackHole/1_Ours/0_3DGS/S3Gaussian/s3gaussian/data/waymo/raw
+ln -s /mnt/pfs/world_foundational_model/qingpowuwu/Project_3_BlackHole/0_Datasets/waymo/processed /mnt/pfs/world_foundational_model/qingpowuwu/Project_3_BlackHole/1_Ours/0_3DGS/S3Gaussian/s3gaussian/data/waymo/processed
 ```
 
 ## 2. Download the raw data
@@ -37,6 +54,7 @@ Start by downloading the necessary data samples as follows:
 For example, to obtain the 114th, 700th, and 754th scenes from the Waymo Open Dataset, execute:
 
 ```shell
+cd /mnt/pfs/world_foundational_model/qingpowuwu/Project_3_BlackHole/1_Ours/0_3DGS/S3Gaussian/s3gaussian
 python data/download_waymo.py \
     --target_dir ./data/waymo/raw \
     --scene_ids 114 700 754
@@ -57,17 +75,17 @@ python data/download_waymo.py \
 
 - **Static32 Split:**
 
-    ```shell
-    python data/download_waymo.py --split_file data/waymo_splits/static32.txt
-    ```
-    
-    <img width="1752" alt="截屏2024-09-03 17 00 31" src="https://github.com/user-attachments/assets/5efef97d-d9ac-4210-bb7e-ee2d99d95456">
+```shell
+python data/download_waymo.py --split_file data/waymo_splits/static32.txt
+```
+
+<img width="1752" alt="截屏2024-09-03 17 00 31" src="https://github.com/user-attachments/assets/5efef97d-d9ac-4210-bb7e-ee2d99d95456">
 
 - **Dynamic32 Split:**
 
-    ```shell
-    python data/download_waymo.py --split_file data/waymo_splits/dynamic32.txt
-    ```
+```shell
+python data/download_waymo.py --split_file data/waymo_splits/dynamic32.txt
+```
 
 Ensure you modify the paths and filenames to align with your project directory structure and needs.
 
